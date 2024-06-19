@@ -15,7 +15,7 @@ int fibonacci(int i) {
 }
 
 int main() {
-  for (int i = 0; i < 45; i++) {
+  for (int i = 0; i < 47; i++) {
     result = fibonacci(i);
   }
 }

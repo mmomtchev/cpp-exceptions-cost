@@ -43,7 +43,7 @@ int main() {
 #if defined(unwind_throwing) || defined(unwind_catching)
   try {
 #endif
-    for (int i = 0; i < 40; i++) {
+    for (int i = 0; i < 41; i++) {
       result = fibonacci(i);
     }
 #if defined(unwind_throwing) || defined(unwind_catching)
