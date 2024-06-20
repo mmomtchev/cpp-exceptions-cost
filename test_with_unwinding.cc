@@ -1,6 +1,20 @@
 #include <stdexcept>
 #include <stdio.h>
-#include <vector>
+
+static int objects;
+
+class IntWithDestructor {
+  int val;
+
+public:
+  IntWithDestructor() : val{} { objects++; }
+  ~IntWithDestructor() { objects--; }
+  int operator=(int rhs) {
+    val = rhs;
+    return val;
+  }
+  operator int() { return val; }
+};
 
 static int result;
 
@@ -10,7 +24,7 @@ int fibonacci(int i)
 #endif
 {
   // Make sure there is stack unwinding code
-  std::vector<int> r{0, 0};
+  IntWithDestructor a, b;
 
   // Optimize the branch prediction
   if (i <= 1) [[unlikely]] {
@@ -29,9 +43,9 @@ int fibonacci(int i)
 #ifdef unwind_catching
   try {
 #endif
-    r[0] = fibonacci(i - 1);
-    r[1] = fibonacci(i - 2);
-    return r[0] + r[1];
+    a = fibonacci(i - 1);
+    b = fibonacci(i - 2);
+    return (int)a + (int)b;
 #ifdef unwind_catching
   } catch (const std::exception &) {
     std::abort();
@@ -43,7 +57,7 @@ int main() {
 #if defined(unwind_throwing) || defined(unwind_catching)
   try {
 #endif
-    for (int i = 0; i < 41; i++) {
+    for (int i = 0; i < 46; i++) {
       result = fibonacci(i);
     }
 #if defined(unwind_throwing) || defined(unwind_catching)
